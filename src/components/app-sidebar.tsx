@@ -3,7 +3,7 @@ import {
   Sidebar, SidebarContent, SidebarGroup, SidebarGroupContent, SidebarGroupLabel,
   SidebarHeader, SidebarMenu, SidebarMenuButton, SidebarMenuItem, SidebarFooter,
 } from "@/components/ui/sidebar";
-import { LayoutDashboard, Target, BookOpen, FileText, BarChart3, Settings, GraduationCap, LogOut, Moon, Sun } from "lucide-react";
+import { LayoutDashboard, Target, BookOpen, FileText, BarChart3, Settings, GraduationCap, LogOut, Moon, Sun, Share2 } from "lucide-react";
 import { useAuth } from "@/hooks/use-auth";
 import { useTheme } from "@/hooks/use-theme";
 import { Button } from "@/components/ui/button";
@@ -13,6 +13,7 @@ const items = [
   { title: "Goals", url: "/goals", icon: Target },
   { title: "Subjects", url: "/subjects", icon: BookOpen },
   { title: "Mock Tests", url: "/tests", icon: FileText },
+  { title: "Shared Resources", url: "/shared-resources", icon: Share2 },
   { title: "Analytics", url: "/analytics", icon: BarChart3 },
   { title: "Settings", url: "/settings", icon: Settings },
 ];

@@ -14,10 +14,12 @@ import { Route as AuthenticatedRouteImport } from './routes/_authenticated'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AuthenticatedTestsRouteImport } from './routes/_authenticated/tests'
 import { Route as AuthenticatedSubjectsRouteImport } from './routes/_authenticated/subjects'
+import { Route as AuthenticatedSharedResourcesRouteImport } from './routes/_authenticated/shared-resources'
 import { Route as AuthenticatedSettingsRouteImport } from './routes/_authenticated/settings'
 import { Route as AuthenticatedGoalsRouteImport } from './routes/_authenticated/goals'
 import { Route as AuthenticatedDashboardRouteImport } from './routes/_authenticated/dashboard'
 import { Route as AuthenticatedAnalyticsRouteImport } from './routes/_authenticated/analytics'
+import { Route as AuthenticatedSubjectsIndexRouteImport } from './routes/_authenticated/subjects.index'
 import { Route as AuthenticatedSubjectsIdRouteImport } from './routes/_authenticated/subjects.$id'
 
 const AuthRoute = AuthRouteImport.update({
@@ -44,6 +46,12 @@ const AuthenticatedSubjectsRoute = AuthenticatedSubjectsRouteImport.update({
   path: '/subjects',
   getParentRoute: () => AuthenticatedRoute,
 } as any)
+const AuthenticatedSharedResourcesRoute =
+  AuthenticatedSharedResourcesRouteImport.update({
+    id: '/shared-resources',
+    path: '/shared-resources',
+    getParentRoute: () => AuthenticatedRoute,
+  } as any)
 const AuthenticatedSettingsRoute = AuthenticatedSettingsRouteImport.update({
   id: '/settings',
   path: '/settings',
@@ -64,6 +72,12 @@ const AuthenticatedAnalyticsRoute = AuthenticatedAnalyticsRouteImport.update({
   path: '/analytics',
   getParentRoute: () => AuthenticatedRoute,
 } as any)
+const AuthenticatedSubjectsIndexRoute =
+  AuthenticatedSubjectsIndexRouteImport.update({
+    id: '/',
+    path: '/',
+    getParentRoute: () => AuthenticatedSubjectsRoute,
+  } as any)
 const AuthenticatedSubjectsIdRoute = AuthenticatedSubjectsIdRouteImport.update({
   id: '/$id',
   path: '/$id',
@@ -77,9 +91,11 @@ export interface FileRoutesByFullPath {
   '/dashboard': typeof AuthenticatedDashboardRoute
   '/goals': typeof AuthenticatedGoalsRoute
   '/settings': typeof AuthenticatedSettingsRoute
+  '/shared-resources': typeof AuthenticatedSharedResourcesRoute
   '/subjects': typeof AuthenticatedSubjectsRouteWithChildren
   '/tests': typeof AuthenticatedTestsRoute
   '/subjects/$id': typeof AuthenticatedSubjectsIdRoute
+  '/subjects/': typeof AuthenticatedSubjectsIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -88,9 +104,10 @@ export interface FileRoutesByTo {
   '/dashboard': typeof AuthenticatedDashboardRoute
   '/goals': typeof AuthenticatedGoalsRoute
   '/settings': typeof AuthenticatedSettingsRoute
-  '/subjects': typeof AuthenticatedSubjectsRouteWithChildren
+  '/shared-resources': typeof AuthenticatedSharedResourcesRoute
   '/tests': typeof AuthenticatedTestsRoute
   '/subjects/$id': typeof AuthenticatedSubjectsIdRoute
+  '/subjects': typeof AuthenticatedSubjectsIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -101,9 +118,11 @@ export interface FileRoutesById {
   '/_authenticated/dashboard': typeof AuthenticatedDashboardRoute
   '/_authenticated/goals': typeof AuthenticatedGoalsRoute
   '/_authenticated/settings': typeof AuthenticatedSettingsRoute
+  '/_authenticated/shared-resources': typeof AuthenticatedSharedResourcesRoute
   '/_authenticated/subjects': typeof AuthenticatedSubjectsRouteWithChildren
   '/_authenticated/tests': typeof AuthenticatedTestsRoute
   '/_authenticated/subjects/$id': typeof AuthenticatedSubjectsIdRoute
+  '/_authenticated/subjects/': typeof AuthenticatedSubjectsIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -114,9 +133,11 @@ export interface FileRouteTypes {
     | '/dashboard'
     | '/goals'
     | '/settings'
+    | '/shared-resources'
     | '/subjects'
     | '/tests'
     | '/subjects/$id'
+    | '/subjects/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -125,9 +146,10 @@ export interface FileRouteTypes {
     | '/dashboard'
     | '/goals'
     | '/settings'
-    | '/subjects'
+    | '/shared-resources'
     | '/tests'
     | '/subjects/$id'
+    | '/subjects'
   id:
     | '__root__'
     | '/'
@@ -137,9 +159,11 @@ export interface FileRouteTypes {
     | '/_authenticated/dashboard'
     | '/_authenticated/goals'
     | '/_authenticated/settings'
+    | '/_authenticated/shared-resources'
     | '/_authenticated/subjects'
     | '/_authenticated/tests'
     | '/_authenticated/subjects/$id'
+    | '/_authenticated/subjects/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -185,6 +209,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedSubjectsRouteImport
       parentRoute: typeof AuthenticatedRoute
     }
+    '/_authenticated/shared-resources': {
+      id: '/_authenticated/shared-resources'
+      path: '/shared-resources'
+      fullPath: '/shared-resources'
+      preLoaderRoute: typeof AuthenticatedSharedResourcesRouteImport
+      parentRoute: typeof AuthenticatedRoute
+    }
     '/_authenticated/settings': {
       id: '/_authenticated/settings'
       path: '/settings'
@@ -213,6 +244,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAnalyticsRouteImport
       parentRoute: typeof AuthenticatedRoute
     }
+    '/_authenticated/subjects/': {
+      id: '/_authenticated/subjects/'
+      path: '/'
+      fullPath: '/subjects/'
+      preLoaderRoute: typeof AuthenticatedSubjectsIndexRouteImport
+      parentRoute: typeof AuthenticatedSubjectsRoute
+    }
     '/_authenticated/subjects/$id': {
       id: '/_authenticated/subjects/$id'
       path: '/$id'
@@ -225,10 +263,12 @@ declare module '@tanstack/react-router' {
 
 interface AuthenticatedSubjectsRouteChildren {
   AuthenticatedSubjectsIdRoute: typeof AuthenticatedSubjectsIdRoute
+  AuthenticatedSubjectsIndexRoute: typeof AuthenticatedSubjectsIndexRoute
 }
 
 const AuthenticatedSubjectsRouteChildren: AuthenticatedSubjectsRouteChildren = {
   AuthenticatedSubjectsIdRoute: AuthenticatedSubjectsIdRoute,
+  AuthenticatedSubjectsIndexRoute: AuthenticatedSubjectsIndexRoute,
 }
 
 const AuthenticatedSubjectsRouteWithChildren =
@@ -241,6 +281,7 @@ interface AuthenticatedRouteChildren {
   AuthenticatedDashboardRoute: typeof AuthenticatedDashboardRoute
   AuthenticatedGoalsRoute: typeof AuthenticatedGoalsRoute
   AuthenticatedSettingsRoute: typeof AuthenticatedSettingsRoute
+  AuthenticatedSharedResourcesRoute: typeof AuthenticatedSharedResourcesRoute
   AuthenticatedSubjectsRoute: typeof AuthenticatedSubjectsRouteWithChildren
   AuthenticatedTestsRoute: typeof AuthenticatedTestsRoute
 }
@@ -250,6 +291,7 @@ const AuthenticatedRouteChildren: AuthenticatedRouteChildren = {
   AuthenticatedDashboardRoute: AuthenticatedDashboardRoute,
   AuthenticatedGoalsRoute: AuthenticatedGoalsRoute,
   AuthenticatedSettingsRoute: AuthenticatedSettingsRoute,
+  AuthenticatedSharedResourcesRoute: AuthenticatedSharedResourcesRoute,
   AuthenticatedSubjectsRoute: AuthenticatedSubjectsRouteWithChildren,
   AuthenticatedTestsRoute: AuthenticatedTestsRoute,
 }
@@ -266,3 +308,13 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { startInstance } from './start.ts'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+    config: Awaited<ReturnType<typeof startInstance.getOptions>>
+  }
+}

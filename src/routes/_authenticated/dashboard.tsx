@@ -6,6 +6,8 @@ import { Card } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import { Target, BookOpen, Flame, TrendingUp, FileText, ArrowRight } from "lucide-react";
 import { format, subDays, parseISO, startOfDay } from "date-fns";
+import { calculateAttemptMarks } from "@/utils/marks";
+
 
 export const Route = createFileRoute("/_authenticated/dashboard")({
   component: Dashboard,
@@ -124,15 +126,21 @@ function Dashboard() {
             <p className="text-sm text-muted-foreground">No attempts yet.</p>
           ) : (
             <ul className="space-y-3">
-              {data.attempts.slice(0, 5).map((a) => (
-                <li key={a.id} className="flex items-center justify-between text-sm">
-                  <div>
-                    <p className="font-medium">{format(parseISO(a.created_at), "MMM d, p")}</p>
-                    <p className="text-xs text-muted-foreground">{a.correct_count}/{a.total_questions} correct</p>
-                  </div>
-                  <span className="font-semibold">{Number(a.score).toFixed(0)}%</span>
-                </li>
-              ))}
+              {data.attempts.slice(0, 5).map((a) => {
+                const { earnedMarks, totalMarks } = calculateAttemptMarks(a.answers as any);
+                return (
+                  <li key={a.id} className="flex items-center justify-between text-sm">
+                    <div>
+                      <p className="font-medium">{format(parseISO(a.created_at), "MMM d, p")}</p>
+                      <p className="text-xs text-muted-foreground">
+                        {a.correct_count}/{a.total_questions} correct · {earnedMarks}/{totalMarks} M
+                      </p>
+                    </div>
+                    <span className="font-semibold">{Number(a.score).toFixed(0)}%</span>
+                  </li>
+                );
+              })}
+
             </ul>
           )}
         </Card>
